@@ -37,5 +37,6 @@ public class SpringBootFirstApplication {
         Alien obj = context.getBean(Alien.class);
         obj.code();
 
+        System.out.println("Spring Application...");
     }
 }
