@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'build-agent'
+        label 'test'
     }
 
     stages {
