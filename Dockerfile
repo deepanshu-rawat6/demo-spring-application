@@ -23,6 +23,7 @@ RUN mkdir -p /opt/maven && \
     rm /tmp/maven.tar.gz
 
 ENV MAVEN_HOME=/opt/maven
+ENV MAVEN_CONFIG="/home/jenkins/.m2"
 ENV PATH=$MAVEN_HOME/bin:$PATH
 
 # AWS-cli just in case
@@ -33,10 +34,12 @@ ENV PATH=$MAVEN_HOME/bin:$PATH
 #RUN apk add --no-cache docker-cli
 
 RUN java --version && \
-    mvn --version
+    mvn --version && \
+    git --version && \
+    python3 --version
 
 RUN rm -rf /var/cache/apk/*
 
 USER jenkins
 
-CMD ["/usr/local/bin/jenkins-agent"]
+ENTRYPOINT ["/usr/local/bin/jenkins-agent"]

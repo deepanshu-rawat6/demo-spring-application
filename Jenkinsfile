@@ -1,14 +1,19 @@
 pipeline {
     agent {
-        label 'build-agent'
+        label 'deepanshu-jenkins-agent'
     }
 
     stages {
-       stage('Test') {
+       stage('Checkout') {
             steps {
-                echo 'Testing......'
+                git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
             }
        }
-    }
 
+       stage('Build') {
+        steps {
+            sh 'mvn clean && mvn install'
+        }
+       }
+    }
 }
