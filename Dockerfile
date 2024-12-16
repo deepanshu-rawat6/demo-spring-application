@@ -14,7 +14,10 @@ RUN apk add --no-cache \
     wget \
     git \
     python3 \
-    py3-pip
+    py3-pip \
+    bash \
+    docker
+
 
 # Maven installation
 RUN mkdir -p /opt/maven && \
@@ -26,6 +29,11 @@ ENV MAVEN_HOME=/opt/maven
 ENV MAVEN_CONFIG="/home/jenkins/.m2"
 ENV PATH=$MAVEN_HOME/bin:$PATH
 
+# Install Docker and Docker-in-Docker
+#RUN apt-get update && apt-get install -y \
+#    docker.io \
+#    && rm -rf /var/lib/apt/lists/*
+
 # AWS-cli just in case
 #RUN pip3 install --no-cache-dir awscli
 #RUN apk add --no-cache-dir awscli
@@ -36,10 +44,11 @@ ENV PATH=$MAVEN_HOME/bin:$PATH
 RUN java --version && \
     mvn --version && \
     git --version && \
-    python3 --version
+    python3 --version && \
+    docker --version
 
 RUN rm -rf /var/cache/apk/*
 
 USER jenkins
 
-ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
+ENTRYPOINT ["sh", "-c","dockerd-entrypoint.sh & /usr/local/bin/jenkins-agent"]

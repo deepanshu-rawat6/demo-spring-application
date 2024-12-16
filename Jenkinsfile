@@ -10,6 +10,15 @@ pipeline {
             }
        }
 
+       stage('Testing for Docker') {
+            steps {
+                sh '''
+                docker --version
+                docker run hello-world
+                '''
+            }
+       }
+
        stage('Build') {
         steps {
             sh 'mvn clean && mvn install'
