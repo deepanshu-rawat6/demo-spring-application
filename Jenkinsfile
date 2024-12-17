@@ -9,7 +9,6 @@ pipeline {
         stage('Checkout to Master and Agents') {
             parallel {
                 stage('Checkout Master') {
-                    agent { node 'master' }
                     steps {
                         git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
                     }
