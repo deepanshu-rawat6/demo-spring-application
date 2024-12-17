@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout to Master') {
             agent {
-                node('master')
+                node 'master-node'
             }
                     steps {
                         git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
