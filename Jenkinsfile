@@ -15,65 +15,77 @@ pipeline {
             }
         }
 
-        stage('Starting build process') {
-            agent { label 'ec2-spot-fleet-agents' }
-            steps {
-                sh 'java --version'
-                sh 'mvn --version'
-            }
-        }
-
-        stage('Build') {
+        stage('Validate Tools') {
             agent { label 'ec2-spot-fleet-agents' }
             steps {
                 sh '''
-                    # Set the JAR name in pom.xml
+                    echo "Validating Java and Maven tools:"
+                    java --version || { echo "Java not found!"; exit 1; }
+                    mvn --version || { echo "Maven not found!"; exit 1; }
+                '''
+            }
+        }
+
+        stage('Build Application') {
+            agent { label 'ec2-spot-fleet-agents' }
+            steps {
+                sh '''
+                    echo "Setting up JAR name dynamically in pom.xml"
                     sed -i 's/<finalName>.*<\\/finalName>/<finalName>${JAR_NAME}<\\/finalName>/' pom.xml
 
-                    # Clean and install with custom JAR name
+                    echo "Starting build process..."
                     mvn clean install -Djar.finalName=${JAR_NAME}
                 '''
             }
         }
 
-        stage('Comprehensive JAR Search') {
+        stage('Find Generated JAR') {
             agent { label 'ec2-spot-fleet-agents' }
             steps {
                 script {
                     sh '''
-                        echo "Searching for JAR files in multiple locations:"
-                        echo "1. Current Working Directory:"
-                        find . -name "*.jar"
-                        echo "\\n2. Maven Local Repository:"
-                        find ~/.m2 -name "*.jar"
-                        echo "\\n3. Target Directory:"
-                        find target -name "*.jar"
-                        echo "\\n4. Detailed Search with File Information:"
-                        find . -name "*.jar" -exec sh -c 'echo "File: {}"; ls -l "{}"; file "{}"; echo "---"' \\;
+                        echo "Searching for generated JAR:"
+                        find target -name "*.jar" -exec ls -lh {} \\;
                     '''
                 }
             }
         }
 
-        stage('Testing Docker on Spot Instance') {
+        stage('Verify and Run Docker') {
             agent { label 'ec2-spot-fleet-agents' }
             steps {
                 sh '''
-                    docker --version
-                    sudo docker run hello-world
+                    echo "Verifying Docker installation..."
+                    docker --version || { echo "Docker not found!"; exit 1; }
+
+                    echo "Testing a secure Docker container:"
+                    docker run --rm hello-world
                 '''
             }
         }
 
-        stage('Push the jar to S3') {
-            agent {
-                label 'ec2-spot-fleet-agents'
-            }
+        stage('Upload JAR to S3') {
+            agent { label 'ec2-spot-fleet-agents' }
             steps {
-                sh '''
-                    aws s3 cp ./target/SpringBootFirst-0.0.1-SNAPSHOT.jar s3://jenkins-spring-boot-build/my-builds/my-app.jar
-                '''
+                withAWS(credentials: AWS_CREDENTIALS_ID, region: "${AWS_REGION}") {
+                    sh '''
+                        echo "Uploading JAR to secure S3 bucket..."
+                        aws s3 cp ./target/${JAR_NAME} s3://${S3_BUCKET}/my-builds/my-app.jar --sse AES256
+                    '''
+                }
             }
+    }
+
+    post {
+        always {
+            cleanWs() // Clean workspace to prevent leftover files
+            echo "Workspace cleaned up."
+        }
+        success {
+            echo "Build and upload successful."
+        }
+        failure {
+            echo "Build failed. Please check the logs."
         }
     }
 }
