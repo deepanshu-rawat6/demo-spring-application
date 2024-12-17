@@ -6,7 +6,10 @@ pipeline {
         AWS_REGION = "us-east-1"
     }
     stages {
-        stage('Checkout to Master and Agents') {
+        stage('Checkout to Master') {
+            agent {
+                node('master')
+            }
                     steps {
                         git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
                     }
