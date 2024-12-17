@@ -56,10 +56,10 @@ pipeline {
             steps {
                 sh '''
                     echo "Verifying Docker installation..."
-                    docker --version || { echo "Docker not found!"; exit 1; }
+                    sudo docker --version || { echo "Docker not found!"; exit 1; }
 
                     echo "Testing a secure Docker container:"
-                    docker run --rm hello-world
+                    sudo docker run hello-world
                 '''
             }
         }
