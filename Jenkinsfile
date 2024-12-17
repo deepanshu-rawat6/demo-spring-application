@@ -5,6 +5,7 @@ pipeline {
         S3_BUCKET = 'jenkins-spring-boot-build'
         AWS_REGION = 'us-east-1'
         SPOT_INSTACES = 'ec2-spot-fleet-agents'
+        TERRAFORM_INSTANCES = 'terraform-build-agents'
         FARGATE_INSTANCES = 'deepanshu-jenkins-agent'
         MASTER_NODE = 'master-node'
     }
@@ -19,7 +20,7 @@ pipeline {
         }
 
         stage('Validate Tools') {
-            agent { label "${SPOT_INSTACES}" }
+            agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Validating Java and Maven tools:"
@@ -30,7 +31,7 @@ pipeline {
         }
 
         stage('Build Application') {
-            agent { label "${SPOT_INSTACES}" }
+            agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Setting up JAR name dynamically in pom.xml"
@@ -43,7 +44,7 @@ pipeline {
         }
 
         stage('Find Generated JAR') {
-            agent { label "${SPOT_INSTACES}" }
+            agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 script {
                     sh '''
@@ -55,7 +56,7 @@ pipeline {
         }
 
         stage('Verify and Run Docker') {
-            agent { label "${SPOT_INSTACES}" }
+            agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Verifying Docker installation..."
@@ -68,7 +69,7 @@ pipeline {
         }
 
         stage('Upload JAR to S3') {
-            agent { label "${SPOT_INSTACES}" }
+            agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Uploading JAR to secure S3 bucket..."
