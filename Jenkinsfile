@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout to Master') {
             agent {
-                node ${ MASTER_NODE }
+                node "${ MASTER_NODE }"
             }
             steps {
                 git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
@@ -19,7 +19,7 @@ pipeline {
         }
 
         stage('Validate Tools') {
-            agent { label ${ SPOT_INSTACES } }
+            agent { label "${ SPOT_INSTACES }" }
             steps {
                 sh '''
                     echo "Validating Java and Maven tools:"
@@ -30,7 +30,7 @@ pipeline {
         }
 
         stage('Build Application') {
-            agent { label ${ SPOT_INSTACES } }
+            agent { label "${ SPOT_INSTACES }" }
             steps {
                 sh '''
                     echo "Setting up JAR name dynamically in pom.xml"
@@ -43,7 +43,7 @@ pipeline {
         }
 
         stage('Find Generated JAR') {
-            agent { label ${ SPOT_INSTACES } }
+            agent { label "${ SPOT_INSTACES }" }
             steps {
                 script {
                     sh '''
@@ -55,7 +55,7 @@ pipeline {
         }
 
         stage('Verify and Run Docker') {
-            agent { label ${ SPOT_INSTACES } }
+            agent { label "${ SPOT_INSTACES }" }
             steps {
                 sh '''
                     echo "Verifying Docker installation..."
@@ -68,7 +68,7 @@ pipeline {
         }
 
         stage('Upload JAR to S3') {
-            agent { label ${ SPOT_INSTACES } }
+            agent { label "${ SPOT_INSTACES }" }
             steps {
                     sh '''
                         echo "Uploading JAR to secure S3 bucket..."
