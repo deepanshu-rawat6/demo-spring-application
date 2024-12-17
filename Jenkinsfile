@@ -15,5 +15,14 @@ pipeline {
             sh 'mvn clean && mvn install'
         }
        }
+
+       stage('Testing Docker') {
+        steps {
+            sh '''
+            docker --version
+            docker run hello-world
+            '''
+        }
+       }
     }
 }
