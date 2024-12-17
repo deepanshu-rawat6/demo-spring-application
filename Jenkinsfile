@@ -78,15 +78,21 @@ pipeline {
     }
     post {
             always {
-                cleanWs() // Clean workspace to prevent leftover files
-                echo 'Workspace cleaned up.'
+                node(label 'master-node') {
+                    cleanWs() // Clean workspace to prevent leftover files
+                    echo 'Workspace cleaned up.'
+                }
             }
             success {
-                echo 'Build and upload successful.'
+                node(label 'master-node') {
+                    echo 'Build successful. Uploaded to S3.'
+                }
             }
             failure {
-                echo 'Build failed. Please check the logs.'
+                node(label 'master-node') {
+                    echo 'Build failed. Please check the logs.'
+                }
             }
-        }
+    }
 }
 
