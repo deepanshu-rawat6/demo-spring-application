@@ -4,11 +4,14 @@ pipeline {
         JAR_NAME = 'demo-spring-application.jar'
         S3_BUCKET = 'jenkins-spring-boot-build'
         AWS_REGION = 'us-east-1'
+        SPOT_INSTACES = 'terraform-spot-instances'
+        FARGATE_INSTANCES = 'deepanshu-jenkins-agent'
+        MASTER_NODE = 'master-node'
     }
     stages {
         stage('Checkout to Master') {
             agent {
-                node 'master-node'
+                node '${MASTER_NODE}'
             }
             steps {
                 git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
@@ -16,7 +19,7 @@ pipeline {
         }
 
         stage('Validate Tools') {
-            agent { label 'ec2-spot-fleet-agents' }
+            agent { label '${SPOT_INSTACES}' }
             steps {
                 sh '''
                     echo "Validating Java and Maven tools:"
@@ -27,7 +30,7 @@ pipeline {
         }
 
         stage('Build Application') {
-            agent { label 'ec2-spot-fleet-agents' }
+            agent { label '${SPOT_INSTACES}' }
             steps {
                 sh '''
                     echo "Setting up JAR name dynamically in pom.xml"
@@ -40,7 +43,7 @@ pipeline {
         }
 
         stage('Find Generated JAR') {
-            agent { label 'ec2-spot-fleet-agents' }
+            agent { label '${SPOT_INSTACES}' }
             steps {
                 script {
                     sh '''
@@ -52,7 +55,7 @@ pipeline {
         }
 
         stage('Verify and Run Docker') {
-            agent { label 'ec2-spot-fleet-agents' }
+            agent { label '${SPOT_INSTACES}' }
             steps {
                 sh '''
                     echo "Verifying Docker installation..."
@@ -65,7 +68,7 @@ pipeline {
         }
 
         stage('Upload JAR to S3') {
-            agent { label 'ec2-spot-fleet-agents' }
+            agent { label '${SPOT_INSTACES}' }
             steps {
                     sh '''
                         echo "Uploading JAR to secure S3 bucket..."
