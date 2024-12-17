@@ -20,7 +20,7 @@ pipeline {
         steps {
             sh '''
             docker --version
-            docker run hello-world
+            sudo docker run hello-world
             '''
         }
        }
