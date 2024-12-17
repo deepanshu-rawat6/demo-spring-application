@@ -15,7 +15,7 @@ pipeline {
             agent { label "${AGENT_LABEL}"}
             steps {
                 sh 'java --version'
-                sh 'maven --version'
+                sh 'mvn --version'
             }
         }
 
