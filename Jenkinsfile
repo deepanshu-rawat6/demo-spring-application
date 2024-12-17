@@ -7,7 +7,6 @@ pipeline {
     }
     stages {
         stage('Checkout to Master and Agents') {
-                    agent { label 'spot-build-agents' }
                     steps {
                         git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
                     }
