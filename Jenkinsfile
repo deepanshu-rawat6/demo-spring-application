@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'spot-agents'
+        label 'spot-build-agents'
     }
 
     stages {
