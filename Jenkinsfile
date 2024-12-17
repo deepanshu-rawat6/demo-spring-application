@@ -16,7 +16,7 @@ pipeline {
         }
 
         stage('Starting build process') {
-            agent { label 'spot-build-agents' }
+            agent { label 'ec2-spot-fleet-agents' }
             steps {
                 sh 'java --version'
                 sh 'mvn --version'
@@ -24,7 +24,7 @@ pipeline {
         }
 
         stage('Build') {
-            agent { label 'spot-build-agents' }
+            agent { label 'ec2-spot-fleet-agents' }
             steps {
                 sh '''
                     # Set the JAR name in pom.xml
@@ -37,7 +37,7 @@ pipeline {
         }
 
         stage('Comprehensive JAR Search') {
-            agent { label 'spot-build-agents' }
+            agent { label 'ec2-spot-fleet-agents' }
             steps {
                 script {
                     sh '''
@@ -56,11 +56,22 @@ pipeline {
         }
 
         stage('Testing Docker on Spot Instance') {
-            agent { label 'spot-build-agents' }
+            agent { label 'ec2-spot-fleet-agents' }
             steps {
                 sh '''
                     docker --version
                     sudo docker run hello-world
+                '''
+            }
+        }
+
+        stage('Push the jar to S3') {
+            agent {
+                label 'ec2-spot-fleet-agents'
+            }
+            steps {
+                sh '''
+                    aws s3 cp ./target/SpringBootFirst-0.0.1-SNAPSHOT.jar s3://jenkins-spring-boot-build/my-builds/my-app.jar
                 '''
             }
         }
