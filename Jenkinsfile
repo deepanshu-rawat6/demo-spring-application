@@ -74,18 +74,19 @@ pipeline {
                     '''
                 }
             }
-    }
+        }
 
-    post {
-        always {
-            cleanWs() // Clean workspace to prevent leftover files
-            echo "Workspace cleaned up."
-        }
-        success {
-            echo "Build and upload successful."
-        }
-        failure {
-            echo "Build failed. Please check the logs."
+        post {
+            always {
+                cleanWs() // Clean workspace to prevent leftover files
+                echo 'Workspace cleaned up.'
+            }
+            success {
+                echo 'Build and upload successful.'
+            }
+            failure {
+                echo 'Build failed. Please check the logs.'
+            }
         }
     }
 }
