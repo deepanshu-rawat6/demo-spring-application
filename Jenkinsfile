@@ -64,6 +64,62 @@ pipeline {
                 '''
             }
         }
+
+
+        stage('Advanced JAR Search on Master') {
+            agent { node 'master-node' }
+            steps {
+                script {
+                    sh '''
+                        echo "Comprehensive JAR Search on Master Node:"
+
+                        # Define search paths
+                        SEARCH_PATHS=(
+                            "."
+                            "$HOME"
+                            "$HOME/.m2"
+                            "$WORKSPACE"
+                            "/opt/jenkins"
+                        )
+
+                        # Function to search JAR
+                        find_jar() {
+                            local path="$1"
+                            echo "Searching in: $path"
+                            find "$path" -name "${JAR_NAME}" 2>/dev/null
+                        }
+
+                        # Track found JARs
+                        FOUND_JARS=()
+
+                        # Search across multiple paths
+                        for path in "${SEARCH_PATHS[@]}"; do
+                            JAR_RESULTS=$(find_jar "$path")
+                            if [ -n "$JAR_RESULTS" ]; then
+                                echo "Found JAR(s) in $path:"
+                                echo "$JAR_RESULTS"
+                                FOUND_JARS+=("$JAR_RESULTS")
+                            fi
+                        done
+
+                        # Verify and display JAR details
+                        if [ ${#FOUND_JARS[@]} -gt 0 ]; then
+                            echo "\\nDetailed JAR Information:"
+                            for jar in "${FOUND_JARS[@]}"; do
+                                echo "File: $jar"
+                                ls -l "$jar"
+                                file "$jar"
+                                echo "MD5 Checksum: $(md5sum "$jar")"
+                                echo "---"
+                            done
+                        else
+                            echo "No JAR file named ${JAR_NAME} found!"
+                            exit 1
+                        fi
+                    '''
+                }
+            }
+        }
     }
 
     post {
