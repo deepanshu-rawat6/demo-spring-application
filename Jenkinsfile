@@ -67,12 +67,10 @@ pipeline {
         stage('Upload JAR to S3') {
             agent { label 'ec2-spot-fleet-agents' }
             steps {
-                withAWS(credentials: AWS_CREDENTIALS_ID, region: "${AWS_REGION}") {
                     sh '''
                         echo "Uploading JAR to secure S3 bucket..."
                         aws s3 cp ./target/${JAR_NAME} s3://${S3_BUCKET}/my-builds/my-app.jar --sse AES256
                     '''
-                }
             }
             post {
                 success {
