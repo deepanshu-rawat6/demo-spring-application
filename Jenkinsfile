@@ -74,25 +74,15 @@ pipeline {
                     '''
                 }
             }
+            post {
+                success {
+                    echo 'JAR uploaded to S3.'
+                }
+                failure {
+                    echo 'JAR upload failed. Please check the logs.'
+                }
+            }
         }
-    }
-    post {
-            always {
-                node(label 'master-node') {
-                    cleanWs() // Clean workspace to prevent leftover files
-                    echo 'Workspace cleaned up.'
-                }
-            }
-            success {
-                node(label 'master-node') {
-                    echo 'Build successful. Uploaded to S3.'
-                }
-            }
-            failure {
-                node(label 'master-node') {
-                    echo 'Build failed. Please check the logs.'
-                }
-            }
     }
 }
 
