@@ -75,8 +75,8 @@ pipeline {
                 }
             }
         }
-
-        post {
+    }
+    post {
             always {
                 cleanWs() // Clean workspace to prevent leftover files
                 echo 'Workspace cleaned up.'
@@ -88,6 +88,5 @@ pipeline {
                 echo 'Build failed. Please check the logs.'
             }
         }
-    }
 }
 
