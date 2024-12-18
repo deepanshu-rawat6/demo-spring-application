@@ -5,7 +5,7 @@ pipeline {
         S3_BUCKET = 'jenkins-spring-boot-build'
         AWS_REGION = 'us-east-1'
         SPOT_INSTACES = 'ec2-spot-fleet-agents'
-        TERRAFORM_INSTANCES = 'terraform-build-agents'
+        TERRAFORM_INSTANCES = 'terraform-agents'
         FARGATE_INSTANCES = 'deepanshu-jenkins-agent'
         MASTER_NODE = 'master-node'
     }

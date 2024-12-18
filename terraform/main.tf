@@ -119,8 +119,8 @@ resource "aws_iam_role_policy_attachment" "s3_full_access" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
-resource "aws_iam_instance_profile" "jenkins_build_agent_instance_role" {
-  name = "jenkins-build-agent-instance-role"
+resource "aws_iam_instance_profile" "jenkins_spot_agent_instance_role" {
+  name = "jenkins-spot-agent-instance-role"
   role = aws_iam_role.s3_access_role.name
 }
 
@@ -131,13 +131,12 @@ resource "aws_launch_template" "jenkins_lt" {
   image_id      = "ami-0e2c8caa4b6378d8c"
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.jenkins_build_agent_instance_role.name
+    name = aws_iam_instance_profile.jenkins_spot_agent_instance_role.name
   }
 
   network_interfaces {
-    associate_public_ip_address = true
-    security_groups             = ["sg-0f853a9caaafe3dfa"]
-    subnet_id                   = "	subnet-07655f7c725dd23c9"
+    security_groups = ["sg-0f853a9caaafe3dfa"]
+    subnet_id       = "	subnet-07655f7c725dd23c9"
   }
 
   block_device_mappings {
