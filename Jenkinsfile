@@ -70,6 +70,14 @@ pipeline {
             }
         }
 
+        stage('Stress Test') {
+            steps {
+                sh '''
+                    docker compose up -d
+                '''
+            }
+        }
+
         stage('Upload JAR to S3') {
             // agent { label "${TERRAFORM_INSTANCES}" }
             steps {

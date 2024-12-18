@@ -115,10 +115,10 @@ provider "aws" {
 # }
 
 resource "aws_launch_template" "jenkins_lt" {
-  name = "jenkins-launch-template"
+  name = "tf_jenkins-launch-template"
 
-  instance_type = "t2.large"
-  image_id      = "ami-0e2c8caa4b6378d8c"
+  instance_type = "t2.xlarge"
+  image_id      = "ami-0bc326e1bc32b4bac"
 
   iam_instance_profile {
     arn = "arn:aws:iam::971422682872:instance-profile/ecs-jenkins-access"
@@ -144,10 +144,11 @@ resource "aws_launch_template" "jenkins_lt" {
 
   ebs_optimized = "true"
 
-  user_data = base64encode(file("./user_data.sh"))
+  # user_data = base64encode(file("./user_data.sh"))
 }
 
 resource "aws_autoscaling_group" "jenkins_asg" {
+  name             = "tf_jenkins_asg"
   min_size         = 1
   desired_capacity = 1
   max_size         = 4

@@ -71,3 +71,7 @@ override.tf.json
 terraform.rc
 
 Transcript
+
+backend/
+frontend/
+nginx.conf/
