@@ -73,7 +73,7 @@ pipeline {
         stage('Stress Test') {
             steps {
                 sh '''
-                    docker compose up -d
+                    docker compose up
                 '''
             }
         }
