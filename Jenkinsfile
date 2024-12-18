@@ -39,10 +39,10 @@ pipeline {
 
                     echo "Starting build process..."
                     mvn clean install -Djar.finalName=${JAR_NAME}
+                    ls -la
                 '''
             }
         }
-
         stage('Find Generated JAR') {
             agent { label "${TERRAFORM_INSTANCES}" }
             steps {

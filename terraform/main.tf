@@ -99,20 +99,20 @@ provider "aws" {
 #   }
 # }
 
-resource "aws_iam_role" "s3_access_role" {
-  name = "jenkins-s3-access-role"
+# resource "aws_iam_role" "s3_access_role" {
+#   name = "jenkins-s3-access-role"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-    }]
-  })
-}
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17",
+#     Statement = [{
+#       Action = "sts:AssumeRole",
+#       Effect = "Allow",
+#       Principal = {
+#         Service = "ec2.amazonaws.com"
+#       }
+#     }]
+#   })
+# }
 
 resource "aws_launch_template" "jenkins_lt" {
   name = "jenkins-launch-template"
@@ -149,8 +149,8 @@ resource "aws_launch_template" "jenkins_lt" {
 
 resource "aws_autoscaling_group" "jenkins_asg" {
   min_size         = 1
-  max_size         = 4
   desired_capacity = 1
+  max_size         = 4
 
   launch_template {
     id      = aws_launch_template.jenkins_lt.id
@@ -167,6 +167,6 @@ output "asg_id" {
   value = aws_autoscaling_group.jenkins_asg.id
 }
 
-output "iam_role_name" {
-  value = aws_iam_role.s3_access_role.name
-}
+# output "iam_role_name" {
+#   value = aws_iam_role.s3_access_role.name
+# }
