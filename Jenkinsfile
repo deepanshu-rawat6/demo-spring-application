@@ -1,5 +1,7 @@
 pipeline {
-    agent none
+    agent {
+        label 'terraform-agents'
+    }
     environment {
         JAR_NAME = 'demo-spring-application.jar'
         S3_BUCKET = 'jenkins-spring-boot-build'
@@ -11,9 +13,9 @@ pipeline {
     }
     stages {
         stage('Checkout to Master') {
-            agent {
-                node "${MASTER_NODE}"
-            }
+            // agent {
+            //     node "${MASTER_NODE}"
+            // }
             steps {
                 git branch: 'master', url: 'https://github.com/deepanshu-rawat6/demo-spring-application'
             }
@@ -31,7 +33,7 @@ pipeline {
         }
 
         stage('Build Application') {
-            agent { label "${TERRAFORM_INSTANCES}" }
+            // agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Setting up JAR name dynamically in pom.xml"
@@ -44,7 +46,7 @@ pipeline {
             }
         }
         stage('Find Generated JAR') {
-            agent { label "${TERRAFORM_INSTANCES}" }
+            // agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 script {
                     sh '''
@@ -56,7 +58,7 @@ pipeline {
         }
 
         stage('Verify and Run Docker') {
-            agent { label "${TERRAFORM_INSTANCES}" }
+            // agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Verifying Docker installation..."
@@ -69,7 +71,7 @@ pipeline {
         }
 
         stage('Upload JAR to S3') {
-            agent { label "${TERRAFORM_INSTANCES}" }
+            // agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Uploading JAR to secure S3 bucket..."
