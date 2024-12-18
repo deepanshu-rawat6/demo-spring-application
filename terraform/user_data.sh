@@ -24,7 +24,15 @@ echo "export PATH=\$MAVEN_HOME/bin:\$PATH" >> /etc/profile.d/maven.sh
 chmod +x /etc/profile.d/maven.sh
 source /etc/profile.d/maven.sh
 
+sudo usermod -aG docker $USER
+
+sudo snap install aws-cli --classic
+
+sudo systemctl restart docker
+
 mvn --version
+
+docker --version
 
 # JENKINS_URL??
 #mkdir -p /var/lib/jenkins
