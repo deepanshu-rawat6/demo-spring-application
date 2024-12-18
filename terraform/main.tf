@@ -118,7 +118,7 @@ resource "aws_launch_template" "jenkins_lt" {
   name = "tf_jenkins-launch-template"
 
   instance_type = "t2.xlarge"
-  image_id      = "ami-0bc326e1bc32b4bac"
+  image_id      = "ami-0f3617604457f3823"
 
   iam_instance_profile {
     arn = "arn:aws:iam::971422682872:instance-profile/ecs-jenkins-access"

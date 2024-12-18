@@ -22,7 +22,7 @@ pipeline {
         }
 
         stage('Validate Tools') {
-            agent { label "${TERRAFORM_INSTANCES}" }
+            // agent { label "${TERRAFORM_INSTANCES}" }
             steps {
                 sh '''
                     echo "Validating Java and Maven tools:"
