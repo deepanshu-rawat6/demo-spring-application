@@ -119,19 +119,19 @@ resource "aws_iam_role_policy_attachment" "s3_full_access" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
-resource "aws_iam_instance_profile" "jenkins_spot_agent_instance_role" {
-  name = "jenkins-spot-agent-instance-role"
+resource "aws_iam_instance_profile" "jenkins_spot_build_agent_instance_role" {
+  name = "jenkins-spot-build-agent-instance-role"
   role = aws_iam_role.s3_access_role.name
 }
 
 resource "aws_launch_template" "jenkins_lt" {
   name = "jenkins-launch-template"
 
-  instance_type = "t3.large"
+  instance_type = "t2.large"
   image_id      = "ami-0e2c8caa4b6378d8c"
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.jenkins_spot_agent_instance_role.name
+    name = aws_iam_instance_profile.jenkins_spot_build_agent_instance_role.name
   }
 
   network_interfaces {
