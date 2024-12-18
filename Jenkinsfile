@@ -73,6 +73,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Uploading JAR to secure S3 bucket..."
+                    ls ./target
                     aws s3 cp ./target/SpringBootFirst-0.0.1-SNAPSHOT.jar s3://${S3_BUCKET}/my-builds/build.jar --sse AES256
                 '''
             }

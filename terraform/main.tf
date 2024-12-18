@@ -114,16 +114,6 @@ resource "aws_iam_role" "s3_access_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "s3_full_access" {
-  role       = aws_iam_role.s3_access_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
-
-resource "aws_iam_instance_profile" "jenkins_spot_build_agent_instance_role" {
-  name = "jenkins-spot-build-agent-instance-role"
-  role = aws_iam_role.s3_access_role.name
-}
-
 resource "aws_launch_template" "jenkins_lt" {
   name = "jenkins-launch-template"
 
@@ -131,7 +121,7 @@ resource "aws_launch_template" "jenkins_lt" {
   image_id      = "ami-0e2c8caa4b6378d8c"
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.jenkins_spot_build_agent_instance_role.name
+    arn = "arn:aws:iam::971422682872:instance-profile/ecs-jenkins-access"
   }
 
   network_interfaces {
