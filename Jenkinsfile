@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        node 'terraform-agents'
+        label 'optimized-agents'
     }
     environment {
         JAR_NAME = 'demo-spring-application.jar'
