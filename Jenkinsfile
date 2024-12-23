@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'ecs-agents'
+        label 'ecs'
     }
     environment {
         JAR_NAME = 'demo-spring-application.jar'
