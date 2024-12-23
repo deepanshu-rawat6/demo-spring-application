@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'optimized-agents'
+        label 'jenkins-ecs-instances'
     }
     environment {
         JAR_NAME = 'demo-spring-application.jar'
@@ -70,13 +70,13 @@ pipeline {
             }
         }
 
-        stage('Stress Test') {
-            steps {
-                sh '''
-                    docker compose up
-                '''
-            }
-        }
+        // stage('Stress Test') {
+        //     steps {
+        //         sh '''
+        //             docker compose up
+        //         '''
+        //     }
+        // }
 
         stage('Upload JAR to S3') {
             // agent { label "${TERRAFORM_INSTANCES}" }
