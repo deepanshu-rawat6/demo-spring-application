@@ -1,7 +1,6 @@
 ARG DOCKER_PLATFORM="linux/amd64"
 ARG ALPINE_VERSION="3.21"
 ARG JDK_VERSION="jdk21"
-ARG MAVEN_VERSION="3.9.9"
 
 FROM jenkins/inbound-agent:alpine${ALPINE_VERSION}-${JDK_VERSION}
 
@@ -22,9 +21,11 @@ RUN apk add --no-cache \
     openrc \
     && rc-update add docker boot
 
+ENV MAVEN_VERSION="3.9.9"
+
 # Install Maven
 RUN mkdir -p /opt/maven && \
-    wget https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz -O /tmp/maven.tar.gz && \
+    wget https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -O /tmp/maven.tar.gz && \ 
     tar -zxvf /tmp/maven.tar.gz -C /opt/maven --strip-components=1 && \
     rm /tmp/maven.tar.gz
 
