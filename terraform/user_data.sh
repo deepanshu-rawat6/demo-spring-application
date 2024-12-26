@@ -41,7 +41,7 @@ curl -O https://s3.${AWS_REGION}.amazonaws.com/amazon-ecs-agent-${AWS_REGION}/am
 sudo dpkg -i amazon-ecs-init-latest.${OS_PACKAGE}
 
 sudo sed -i '/\[Unit\]/a After=cloud-final.service' /lib/systemd/system/ecs.service
-echo "ECS_CLUSTER=ecs-jenkins-cluster" | sudo tee /etc/ecs/ecs.config
+echo "ECS_CLUSTER=new-cluster" | sudo tee /etc/ecs/ecs.config
 
 sudo systemctl enable ecs
 sudo systemctl daemon-reload
