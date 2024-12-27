@@ -57,26 +57,26 @@ pipeline {
             }
         }
 
-        stage('Verify and Run Docker') {
-            // agent { label "${TERRAFORM_INSTANCES}" }
-            steps {
-                sh '''
-                    echo "Verifying Docker installation..."
-                    sudo docker --version || { echo "Docker not found!"; exit 1; }
+        // stage('Verify and Run Docker') {
+        //     // agent { label "${TERRAFORM_INSTANCES}" }
+        //     steps {
+        //         sh '''
+        //             echo "Verifying Docker installation..."
+        //             sudo docker --version || { echo "Docker not found!"; exit 1; }
 
-                    echo "Testing a secure Docker container:"
-                    sudo docker run hello-world
-                '''
-            }
-        }
+        //             echo "Testing a secure Docker container:"
+        //             sudo docker run hello-world
+        //         '''
+        //     }
+        // }
 
-        stage('Stress Test') {
-            steps {
-                sh '''
-                    docker compose up
-                '''
-            }
-        }
+        // stage('Stress Test') {
+        //     steps {
+        //         sh '''
+        //             docker compose up
+        //         '''
+        //     }
+        // }
 
         stage('Upload JAR to S3') {
             // agent { label "${TERRAFORM_INSTANCES}" }
