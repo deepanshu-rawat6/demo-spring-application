@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'deepanshu-jenkins-agent'
+        label 'testing'
     }
     environment {
         JAR_NAME = 'demo-spring-application.jar'
@@ -28,6 +28,7 @@ pipeline {
                     echo "Validating Java and Maven tools:"
                     java --version || { echo "Java not found!"; exit 1; }
                     mvn --version || { echo "Maven not found!"; exit 1; }
+                    docker --version
                 '''
             }
         }
@@ -52,6 +53,16 @@ pipeline {
                     sh '''
                         echo "Searching for generated JAR:"
                         find target -name "*.jar" -exec ls -lh {} \\;
+                    '''
+                }
+            }
+        }
+
+        stage('Run docker container') {
+            steps {
+                script {
+                    sh '''
+                        docker run hello-world
                     '''
                 }
             }
