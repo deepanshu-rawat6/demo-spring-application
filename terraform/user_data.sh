@@ -2,29 +2,29 @@
 
 set -e
 
-# Update and upgrade the system
+# Update and upgrade
 sudo apt update -y && sudo apt upgrade -y
 
-# Install Docker
+# Installing docker
 sudo apt install -y docker.io
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# Install Java
+# Installing Java 21
 sudo apt install -y openjdk-21-jdk
 java --version
 
-# Install Maven
+# Installing maven: latest
 sudo apt install -y maven
 
-# Configure Maven environment
+# Setting paths for maven
 echo "export MAVEN_HOME=/usr/share/maven" | sudo tee /etc/profile.d/maven.sh
 echo "export MAVEN_CONFIG=/etc/maven" | sudo tee -a /etc/profile.d/maven.sh
 echo "export PATH=\$MAVEN_HOME/bin:\$PATH" | sudo tee -a /etc/profile.d/maven.sh
 sudo chmod +x /etc/profile.d/maven.sh
 source /etc/profile.d/maven.sh
 
-# Add user to Docker group
+# Adding the user to docker(for non-sudo access)
 sudo usermod -aG docker $USER
 
 # Install AWS CLI
@@ -41,18 +41,16 @@ curl -O https://s3.${AWS_REGION}.amazonaws.com/amazon-ecs-agent-${AWS_REGION}/am
 sudo dpkg -i amazon-ecs-init-latest.${OS_PACKAGE}
 
 sudo sed -i '/\[Unit\]/a After=cloud-final.service' /lib/systemd/system/ecs.service
-echo "ECS_CLUSTER=new-cluster" | sudo tee /etc/ecs/ecs.config
+echo "ECS_CLUSTER=<"CLUSTER_NAME">" | sudo tee /etc/ecs/ecs.config
+
+sudo systemctl start ecs
 
 sudo systemctl enable ecs
 sudo systemctl daemon-reload
+
+sudo rm /var/lib/ecs/data/agent.db
+sudo rm /var/lib/ecs/data/ecs_agent_data.json
+
 sudo systemctl restart ecs
 
-# Reboot the system to apply kernel upgrades
 sudo reboot
-
-# JENKINS_URL??
-#mkdir -p /var/lib/jenkins
-#wget -O /tmp/agent.jar http://<JENKINS_URL>/jnlpJars/agent.jar
-#
-## shellcheck disable=SC2261
-#java -jar /tmp/agent.jar -jnlpUrl http://<JENKINS_URL>/computer/spot-agent/slave-agent.jnlp -secret <SECRET> -workDir "/var/lib/jenkins"
