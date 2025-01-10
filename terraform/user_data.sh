@@ -1,12 +1,6 @@
 #!/bin/bash
 
-set -e
-
-# Update and upgrade
-sudo apt update -y 
-
-# Installing Java 21
-sudo apt install -y openjdk-21-jdk maven
+sudo apt update && sudo apt install -y openjdk-21-jdk maven
 
 # Setting paths for maven
 echo "export MAVEN_HOME=/usr/share/maven" | sudo tee /etc/profile.d/maven.sh
